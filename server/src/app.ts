@@ -10,6 +10,7 @@ app.get("/", (req, res) => {
 });
 app.post("/upload", async (req, res) => {
   let data = req.body;
+
   if (data) {
     try{
       await mongoose.connect("mongodb://39.105.171.169:27017/msmpicp", {
