@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 let ContextData = new mongoose.Schema({
-  uniqueId:String,
-  model:String,
-  brand:String,
- data:{
+  deviceId: {
+    type: mongoose.Types.ObjectId,
+    ref: "device",
+  },
   timeString: { type: String },
   location: {
     type: {
@@ -37,6 +37,5 @@ let ContextData = new mongoose.Schema({
       z: Number,
     },
   },
- }
 });
-export default ContextData
+export default mongoose.model("ContextData", ContextData);
