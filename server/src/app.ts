@@ -1,29 +1,35 @@
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
-import ContextData from "./Model/ContextData";
+import ContextData from "./model/contextdata";
 const app = express();
-app.use(bodyParser());
+app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   res.send("MSMPICP 后台!");
 });
 app.post("/upload", async (req, res) => {
   let data = req.body;
-  if(data)
-  {
-    mongoose.connect("mongose://39.105.171.169:27017/msmpicp",{
-      useNewUrlParser:true
-    })
-    const contextData = mongoose.model('ContextData',ContextData)
-    await contextData.insertMany(data);
-    res.send("upload success");
+  if (data) {
+    try{
+      await mongoose.connect("mongodb://39.105.171.169:27017/msmpicp", {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      })
+      const contextData = mongoose.model('ContextData', ContextData)
+      await contextData.insertMany(data)
+      res.send("upload success");
+    }
+    catch(e)
+    {
+      console.log(e)
+      res.send(""+e);
+    }
   }
-  else
-  {
+  else {
     res.send("nothing upload");
   }
-  
+
 });
 
 app.listen(5000, () => {

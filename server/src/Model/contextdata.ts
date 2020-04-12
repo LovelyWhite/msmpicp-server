@@ -1,9 +1,4 @@
 import mongoose from "mongoose";
-interface ThreeAxisMeasurement {
-  x: Number;
-  y: Number;
-  z: Number;
-}
 let ContextData = new mongoose.Schema({
   timeString: { type: String },
   location: {
