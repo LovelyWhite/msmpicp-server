@@ -1,7 +1,8 @@
 import React from "react";
-
-export default class Index extends React.Component {
-  render() {
-    return <h1>123455</h1>;
-  }
-}
+export default () => {
+  return (
+    <div style={{}}>
+      <div style={{ width: 30 }}>demo</div>
+    </div>
+  );
+};
