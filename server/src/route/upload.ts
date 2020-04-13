@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
             uniqueId: data.uniqueId,
           });
           let insertRs = await deviceDoc.save();
-          insertRs && (modelId = insertRs._id);
+          insertRs && (deviceId = insertRs._id);
         }
       }
       if (deviceId) {
