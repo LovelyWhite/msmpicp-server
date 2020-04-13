@@ -1,12 +1,10 @@
-import mongoose, { Collection } from "mongoose";
+import mongoose from "mongoose";
 let ModelData = new mongoose.Schema({
   brandName: {
     type: String,
-    // unique:true
   },
   phoneModelName: {
     type: String,
-    // unique:true
   },
 });
 ModelData.index({ brandName: 1, phoneModelName: 1 }, { unique: true });

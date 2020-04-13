@@ -6,7 +6,7 @@ export async function openMongoose() {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    return "success";
+    return "database start success";
   } catch (e) {
     return "" + e;
   }
@@ -14,7 +14,7 @@ export async function openMongoose() {
 export async function closeMongoose() {
   try {
     await mongoose.disconnect();
-    return "success";
+    return "database stop success";
   } catch (e) {
     return "" + e;
   }

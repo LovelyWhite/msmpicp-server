@@ -3,7 +3,6 @@ import ContextDataModel from "../model/contextdata";
 import ModelModel from "../model/model";
 import DeviceModel from "../model/device";
 import { DeviceUploadData } from "../utils";
-import device from "../model/device";
 let router = express.Router();
 
 router.post("/", async (req, res) => {
@@ -35,7 +34,6 @@ router.post("/", async (req, res) => {
         let deviceResult = await DeviceModel.findOne({
           modelId,
         });
-        console.log(deviceResult);
         if (deviceResult) {
           deviceId = deviceResult._id;
         } else {

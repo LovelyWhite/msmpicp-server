@@ -9,6 +9,10 @@ export interface ThreeAxisMeasurement {
   y: number;
   z: number;
 }
+export interface LoginData {
+  userName: string;
+  password: string;
+}
 export interface BarometerMeasurement {
   pressure: number;
   relativeAltitude?: number;
