@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 export async function openMongoose() {
   try {
-    //   "mongodb://39.105.171.169:27017/msmpicp"
-    await mongoose.connect("mongodb://39.105.171.169:27017/msmpicp", {
+    //   "mongodb://admin:Mishiweilai123@39.105.171.169:27017"
+    await mongoose.connect("mongodb://admin:Mishiweilai123@39.105.171.169:27017/msmpicp?authSource=admin&readPreference=primary&gssapiServiceName=mongodb&appname=MongoDB%20Compass&ssl=false", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
