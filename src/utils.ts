@@ -1,13 +1,15 @@
 import axios from "axios";
 export const URL = "http://localhost:5000";
-export function pushData(
+export function fetchData(
   url: string,
   values: any,
-  onUploadProgress?: (progressEvent: any) => void
+  onUploadProgress?: (progressEvent: any) => void,
+  token?:string
 ) {
   return axios.post(URL + url, values, {
     headers: {
       "Content-Type": "application/json",
+      "Authorization":token
     },
     onUploadProgress: onUploadProgress,
   });

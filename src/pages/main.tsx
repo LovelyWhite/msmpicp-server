@@ -3,16 +3,18 @@ import "antd/dist/antd.css";
 import LeftMenu from "../components/menu";
 import Nav from "../components/nav";
 import { Col, Layout, Row } from "antd";
-import { Route } from "react-router-dom";
-import Login from ".";
+import { Route, Switch } from "react-router-dom";
+import DashBoard from "./dash";
 const { Header, Content, Sider } = Layout;
-interface States {}
-export default class Main extends React.Component<{}, States> {
-  constructor(props: {}) {
+interface States { }
+interface Props {
+  history: any
+}
+export default class Main extends React.Component<Props, States> {
+  constructor(props: Readonly<Props>) {
     super(props);
     this.state = {};
   }
-
   render() {
     return (
       <Layout style={{ height: "100%" }}>
@@ -24,7 +26,6 @@ export default class Main extends React.Component<{}, States> {
             alignItems: "center",
             paddingLeft: 12,
             paddingRight: 12,
-            height: 55,
           }}
         >
           <img
@@ -36,10 +37,13 @@ export default class Main extends React.Component<{}, States> {
           <Nav />
         </Header>
         <Layout>
-          <Sider width={170}>
+          <Sider width={170} style={{backgroundColor:"#00000000" }}>
             <LeftMenu />
           </Sider>
-          <Content>ceshi1</Content>
+          <Content style={{padding:2}}>
+            <Route path="/main/dash" component={DashBoard} />
+            <Route path="/main/hotpoint" component={DashBoard} />
+          </Content>
         </Layout>
       </Layout>
     );

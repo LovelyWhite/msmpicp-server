@@ -67,7 +67,7 @@ class App extends React.Component<{}, States> {
         <Router history={App.bHistory}>
           <Switch>
             <Route exact path="/" component={Login} />
-            <Route exact path="/main" component={Main} />
+            <Route path="/main" component={Main} />
           </Switch>
         </Router>
       </Col>

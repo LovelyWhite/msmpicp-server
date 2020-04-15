@@ -7,7 +7,7 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import "antd/dist/antd.css";
 const { SubMenu } = Menu;
 
@@ -24,11 +24,11 @@ class _LeftMenu extends React.Component<any> {
         defaultOpenKeys={["sub1"]}
         mode="inline"
         theme="light"
-        style={{ width: 170, height: "100%" }}
+        style={{ width: 170, height: "100%", marginTop: 2 }}
       >
         <Menu.Item style={styles.menuInline} key="1">
           <MailOutlined />
-          仪表盘
+          <Link to="/main/dash">仪表盘</Link>
         </Menu.Item>
         <Menu.Item style={styles.menuInline} key="2">
           <CalendarOutlined />
@@ -44,7 +44,7 @@ class _LeftMenu extends React.Component<any> {
           }
         >
           <Menu.Item key="3">实时数据</Menu.Item>
-          <Menu.Item key="4">1234</Menu.Item>
+          <Menu.Item key="4">历史数据</Menu.Item>
         </SubMenu>
         <SubMenu
           key="sub2"
@@ -67,6 +67,7 @@ class _LeftMenu extends React.Component<any> {
 let styles = {
   menuInline: {
     marginTop: 0,
+    marginBottom: 0
   },
 };
 let LeftMenu = withRouter(_LeftMenu);

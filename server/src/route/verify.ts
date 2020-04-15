@@ -1,6 +1,6 @@
 //这个文件用来做有关用户的操作
 
-// import jwt from "express-jwt";
+import jwt from "jsonwebtoken";
 import UserModel from "../model/user";
 import express from "express";
 import { LoginData } from "../utils";
@@ -43,7 +43,16 @@ router.post("/login", async (req, res) => {
 
     let result = await UserModel.findOne(data);
     if (result) {
-      res.send({ code: 1, data: {}, msg: "验证成功" });
+      const token = "Bearer "+jwt.sign(
+        {
+          id:result._id
+        },
+        'Mishiweilai123',
+        {
+          expiresIn: "10h"
+        }
+      )
+      res.send({ code: 1, data: {token: token}, msg: "验证成功" });
     } else {
       res.send({ code: -4, data: {}, msg: "账号或密码错误" });
     }
