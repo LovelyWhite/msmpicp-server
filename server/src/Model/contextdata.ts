@@ -38,4 +38,4 @@ let ContextData = new mongoose.Schema({
     },
   },
 });
-export default mongoose.model("ContextData", ContextData);
+export default mongoose.model("contextdata", ContextData);

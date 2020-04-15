@@ -2,13 +2,13 @@ import React from "react";
 import "antd/dist/antd.css";
 import LeftMenu from "../components/menu";
 import Nav from "../components/nav";
-import { Col, Layout, Row } from "antd";
-import { Route, Switch } from "react-router-dom";
+import { Layout } from "antd";
+import { Route } from "react-router-dom";
 import DashBoard from "./dash";
 const { Header, Content, Sider } = Layout;
-interface States { }
+interface States {}
 interface Props {
-  history: any
+  history: any;
 }
 export default class Main extends React.Component<Props, States> {
   constructor(props: Readonly<Props>) {
@@ -37,10 +37,10 @@ export default class Main extends React.Component<Props, States> {
           <Nav />
         </Header>
         <Layout>
-          <Sider width={170} style={{backgroundColor:"#00000000" }}>
+          <Sider width={170} style={{ backgroundColor: "#00000000" }}>
             <LeftMenu />
           </Sider>
-          <Content style={{padding:2}}>
+          <Content style={{ padding: 15 }}>
             <Route path="/main/dash" component={DashBoard} />
             <Route path="/main/hotpoint" component={DashBoard} />
           </Content>
