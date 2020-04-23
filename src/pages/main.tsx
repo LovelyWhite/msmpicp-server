@@ -24,7 +24,7 @@ export default class Main extends React.Component<Props, States> {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            paddingLeft: 12,
+            paddingLeft: 20,
             paddingRight: 12,
           }}
         >

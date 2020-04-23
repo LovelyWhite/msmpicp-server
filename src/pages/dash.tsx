@@ -1,8 +1,9 @@
+import "./styles.css";
 import React from "react";
 import { fetchData, showError } from "../utils";
 import "echarts";
 import ECharts from "echarts/lib/echarts";
-import { DropboxOutlined } from "@ant-design/icons";
+import { DropboxOutlined, TagOutlined } from "@ant-design/icons";
 interface Props {
   history: any;
 }
@@ -149,23 +150,53 @@ export default class DashBoard extends React.Component<Props> {
           height: "100%",
         }}
       >
-        <div
-          style={{
-            float: "left",
-            height: 200,
-            width: 270,
-            minHeight: 200,
-            minWidth: 270,
-            paddingTop: 10,
-            margin: 10,
-            backgroundColor: "#fff",
-            borderRadius: 5,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div
+            className="keyValueContainer"
+            style={{ backgroundColor: "#69c0ff" }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <TagOutlined style={{ fontSize: "18px", color: "#eee" }} />
+              <span
+                style={{
+                  marginLeft: 5,
+                  fontSize: 12,
+                  color: "#eee",
+                }}
+              >
+                今日数据量
+              </span>
+            </div>
+            <div
+              style={{
+                textAlign: "center",
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                color: "#eee",
+                fontSize: 35,
+              }}
+            >
+              <span>30</span>
+            </div>
+          </div>
+          <div
+            className="keyValueContainer"
+            style={{ backgroundColor: "#36cfc9" }}
+          ></div>
+          <div
+            className="keyValueContainer"
+            style={{ backgroundColor: "#73d13d" }}
+          ></div>
+        </div>
+        <div style={styles.graphContainer}>
           <span style={{ fontSize: 10 }}>每日数据趋势</span>
           <div
             style={{
@@ -182,23 +213,7 @@ export default class DashBoard extends React.Component<Props> {
             <DropboxOutlined style={{ fontSize: 20 }} />
           </div>
         </div>
-        <div
-          style={{
-            float: "left",
-            height: 200,
-            margin: 10,
-            width: 270,
-            minHeight: 200,
-            minWidth: 270,
-            paddingTop: 10,
-            backgroundColor: "#fff",
-            borderRadius: 5,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
+        <div style={styles.graphContainer}>
           <span style={{ fontSize: 10 }}>机型数量统计</span>
           <div
             style={{
@@ -219,3 +234,21 @@ export default class DashBoard extends React.Component<Props> {
     );
   }
 }
+
+const styles = {
+  graphContainer: {
+    float: "left",
+    height: 200,
+    width: 270,
+    minHeight: 200,
+    minWidth: 270,
+    paddingTop: 10,
+    margin: 10,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+  } as React.CSSProperties,
+};
