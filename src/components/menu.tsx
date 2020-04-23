@@ -24,7 +24,7 @@ class _LeftMenu extends React.Component<any> {
         defaultOpenKeys={["sub1"]}
         mode="inline"
         theme="light"
-        style={{ width: 170, height: "100%", marginTop: 2 }}
+        style={{ width: 170, height: "100%" }}
       >
         <Menu.Item style={styles.menuInline} key="1">
           <MailOutlined />
@@ -67,7 +67,7 @@ class _LeftMenu extends React.Component<any> {
 let styles = {
   menuInline: {
     marginTop: 0,
-    marginBottom: 0
+    marginBottom: 0,
   },
 };
 let LeftMenu = withRouter(_LeftMenu);

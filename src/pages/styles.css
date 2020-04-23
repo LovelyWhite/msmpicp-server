@@ -1,9 +1,10 @@
 .keyValueContainer {
   display: flex;
   flex-direction: column;
-  padding: 5px 20px 10px 10px;
-  width: 200px;
-  height: 100px;
+  color: azure;
+  padding: 8px;
+  width: 160px;
+  height: 80px;
   margin: 10px;
   border-radius: 5px;
 }

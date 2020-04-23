@@ -3,7 +3,12 @@ import React from "react";
 import { fetchData, showError } from "../utils";
 import "echarts";
 import ECharts from "echarts/lib/echarts";
-import { DropboxOutlined, TagOutlined } from "@ant-design/icons";
+import {
+  DropboxOutlined,
+  TagOutlined,
+  CompassOutlined,
+  AimOutlined,
+} from "@ant-design/icons";
 interface Props {
   history: any;
 }
@@ -162,12 +167,11 @@ export default class DashBoard extends React.Component<Props> {
                 alignItems: "center",
               }}
             >
-              <TagOutlined style={{ fontSize: "18px", color: "#eee" }} />
+              <TagOutlined style={{ fontSize: "15px" }} />
               <span
                 style={{
                   marginLeft: 5,
                   fontSize: 12,
-                  color: "#eee",
                 }}
               >
                 今日数据量
@@ -180,8 +184,7 @@ export default class DashBoard extends React.Component<Props> {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                color: "#eee",
-                fontSize: 35,
+                fontSize: 20,
               }}
             >
               <span>30</span>
@@ -190,11 +193,71 @@ export default class DashBoard extends React.Component<Props> {
           <div
             className="keyValueContainer"
             style={{ backgroundColor: "#36cfc9" }}
-          ></div>
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <AimOutlined style={{ fontSize: "15px" }} />
+              <span
+                style={{
+                  marginLeft: 5,
+                  fontSize: 12,
+                }}
+              >
+                热门区域
+              </span>
+            </div>
+            <div
+              style={{
+                textAlign: "center",
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                fontSize: 20,
+              }}
+            >
+              <span>郑州</span>
+            </div>
+          </div>
           <div
             className="keyValueContainer"
             style={{ backgroundColor: "#73d13d" }}
-          ></div>
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <CompassOutlined style={{ fontSize: "15px" }} />
+              <span
+                style={{
+                  marginLeft: 5,
+                  fontSize: 12,
+                }}
+              >
+                最高磁场
+              </span>
+            </div>
+            <div
+              style={{
+                textAlign: "center",
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                fontSize: 20,
+              }}
+            >
+              <span>30.2345</span>
+            </div>
+          </div>
         </div>
         <div style={styles.graphContainer}>
           <span style={{ fontSize: 10 }}>每日数据趋势</span>
@@ -238,11 +301,11 @@ export default class DashBoard extends React.Component<Props> {
 const styles = {
   graphContainer: {
     float: "left",
-    height: 200,
-    width: 270,
+    height: 180,
+    width: 300,
     minHeight: 200,
     minWidth: 270,
-    paddingTop: 10,
+    padding: 15,
     margin: 10,
     backgroundColor: "#fff",
     borderRadius: 5,
