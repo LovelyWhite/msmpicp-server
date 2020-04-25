@@ -21,10 +21,12 @@ class _LeftMenu extends React.Component<any> {
     return (
       <Menu
         defaultSelectedKeys={["1"]}
-        defaultOpenKeys={["sub1"]}
         mode="inline"
         theme="light"
         style={{ width: 170, height: "100%" }}
+        // onClick={(pram) => {
+        //   console.log(pram);
+        // }}
       >
         <Menu.Item style={styles.menuInline} key="1">
           <MailOutlined />
@@ -32,7 +34,7 @@ class _LeftMenu extends React.Component<any> {
         </Menu.Item>
         <Menu.Item style={styles.menuInline} key="2">
           <CalendarOutlined />
-          热区
+          <Link to="/main/hotzone"> 热区</Link>
         </Menu.Item>
         <SubMenu
           key="sub1"

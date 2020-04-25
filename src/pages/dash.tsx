@@ -3,6 +3,8 @@ import React from "react";
 import { fetchData, showError } from "../utils";
 import "echarts";
 import ECharts from "echarts/lib/echarts";
+import theme from "../static/theme.json";
+
 import {
   DropboxOutlined,
   TagOutlined,
@@ -12,7 +14,13 @@ import {
 interface Props {
   history: any;
 }
-export default class DashBoard extends React.Component<Props> {
+interface States {
+  todayData: number; //今日数据量
+  popularRegion: string; //热门区域
+  maxMagnetic: number; //最高磁力
+}
+ECharts.registerTheme("walden", theme);
+export default class DashBoard extends React.Component<Props, States> {
   token: string;
   dailyDataEchart: ECharts.ECharts;
   dailyData: HTMLDivElement;
@@ -20,13 +28,47 @@ export default class DashBoard extends React.Component<Props> {
   modelDataEchart: ECharts.ECharts;
   constructor(props: Readonly<Props>) {
     super(props);
+    this.state = {
+      todayData: -1,
+      popularRegion: "",
+      maxMagnetic: -1,
+    };
     this.token = localStorage.getItem("token");
     this.getDailyData = this.getDailyData.bind(this);
+    this.getModelData = this.getModelData.bind(this);
+    this.getKeyValue = this.getKeyValue.bind(this);
   }
   componentDidMount() {
     this.getDailyData();
-    // this.getModelData();
+    this.getModelData();
+    this.getKeyValue();
   }
+  //获取关键信息
+  async getKeyValue() {
+    let todayData = await fetchData(
+      "/download/todayData",
+      {},
+      undefined,
+      this.token
+    );
+    if (todayData && todayData.data) {
+      if (todayData.data.code === 1) {
+        this.setState({
+          todayData: todayData.data.data,
+        });
+      } else {
+        showError(todayData.data.msg);
+      }
+    }
+  }
+  // async getKeyValue(){
+  //   let todayData = await fetchData("/download/todayData",{},undefined,this.token);
+  //   if (todayData && todayData.data) {
+  //     if (todayData.data.code === 1) {}else {
+  //       showError(todayData.data.msg);
+  //     }
+  //   }
+  // }
   async getModelData() {
     try {
       let result = await fetchData(
@@ -40,27 +82,30 @@ export default class DashBoard extends React.Component<Props> {
           let xAxisData = [];
           let yAxisData = [];
           result.data.data.forEach((e: any) => {
-            // xAxisData.push(e._id);
-            // yAxisData.push(e.total);
+            xAxisData.push(e.modelName);
+            yAxisData.push(e.total);
           });
-          this.modelDataEchart = ECharts.init(this.modelData);
+          // console.log(xAxisData, yAxisData);
+          this.modelDataEchart = ECharts.init(this.modelData, "walden");
           this.modelDataEchart.setOption({
             tooltip: {
               trigger: "axis",
             },
             xAxis: [
               {
+                name: "机型",
                 type: "category",
                 data: xAxisData,
               },
             ],
             grid: {
-              top: 10,
+              top: 30,
               bottom: 30,
-              right: 10,
+              right: 40,
             },
             yAxis: [
               {
+                minInterval: 1,
                 type: "value",
                 name: "台",
                 show: true,
@@ -73,9 +118,10 @@ export default class DashBoard extends React.Component<Props> {
             ],
             series: [
               {
-                name: "台",
-                type: "line",
+                name: "数量",
+                type: "bar",
                 data: yAxisData,
+                barMaxWidth: 30,
               },
             ],
           });
@@ -103,24 +149,26 @@ export default class DashBoard extends React.Component<Props> {
             xAxisData.push(e._id);
             yAxisData.push(e.total);
           });
-          this.dailyDataEchart = ECharts.init(this.dailyData);
+          this.dailyDataEchart = ECharts.init(this.dailyData, "walden");
           this.dailyDataEchart.setOption({
             tooltip: {
               trigger: "axis",
             },
             xAxis: [
               {
+                name: "日期",
                 type: "category",
                 data: xAxisData,
               },
             ],
             grid: {
-              top: 10,
+              top: 30,
               bottom: 30,
-              right: 10,
+              right: 40,
             },
             yAxis: [
               {
+                minInterval: 1,
                 type: "value",
                 name: "数据量",
                 show: true,
@@ -144,6 +192,7 @@ export default class DashBoard extends React.Component<Props> {
         }
       }
     } catch (e) {
+      showError(e + "");
       console.log(e);
     }
   }
@@ -187,7 +236,7 @@ export default class DashBoard extends React.Component<Props> {
                 fontSize: 20,
               }}
             >
-              <span>30</span>
+              <span>{this.state.todayData}</span>
             </div>
           </div>
           <div
@@ -221,7 +270,7 @@ export default class DashBoard extends React.Component<Props> {
                 fontSize: 20,
               }}
             >
-              <span>郑州</span>
+              <span>{this.state.popularRegion}</span>
             </div>
           </div>
           <div
@@ -255,7 +304,7 @@ export default class DashBoard extends React.Component<Props> {
                 fontSize: 20,
               }}
             >
-              <span>30.2345</span>
+              <span>{this.state.maxMagnetic}</span>
             </div>
           </div>
         </div>
@@ -305,7 +354,7 @@ const styles = {
     width: 300,
     minHeight: 200,
     minWidth: 270,
-    padding: 15,
+    padding: "15px 10px 5px 3px",
     margin: 10,
     backgroundColor: "#fff",
     borderRadius: 5,

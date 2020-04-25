@@ -4,12 +4,12 @@ export function fetchData(
   url: string,
   values: any,
   onUploadProgress?: (progressEvent: any) => void,
-  token?:string
+  token?: string
 ) {
   return axios.post(URL + url, values, {
     headers: {
       "Content-Type": "application/json",
-      "Authorization":token
+      Authorization: token,
     },
     onUploadProgress: onUploadProgress,
   });
@@ -18,5 +18,5 @@ export function showWarning(msg: string) {
   global["showWarning"](msg);
 }
 export function showError(msg: string) {
-  global["showWarning"](msg);
+  global["showError"](msg);
 }

@@ -27,10 +27,12 @@ class _Nav extends React.Component<any> {
     return (
       <Menu
         onClick={this.handleClick}
+        style={{ height: "100%" }}
         selectedKeys={[this.state.current]}
         mode="horizontal"
       >
         <SubMenu
+          style={{ height: "100%" }}
           title={
             <SettingOutlined
               style={{

@@ -5,6 +5,7 @@ import Nav from "../components/nav";
 import { Layout } from "antd";
 import { Route } from "react-router-dom";
 import DashBoard from "./dash";
+import HotZone from "./hotzone";
 const { Header, Content, Sider } = Layout;
 interface States {}
 interface Props {
@@ -26,11 +27,11 @@ export default class Main extends React.Component<Props, States> {
             alignItems: "center",
             paddingLeft: 20,
             paddingRight: 12,
+            height: 50,
           }}
         >
           <img
             width={521 / 3}
-            height={78 / 3}
             src={process.env.PUBLIC_URL + "/intro.png"}
             alt="首页图标"
           />
@@ -42,7 +43,7 @@ export default class Main extends React.Component<Props, States> {
           </Sider>
           <Content style={{ padding: 15 }}>
             <Route path="/main/dash" component={DashBoard} />
-            <Route path="/main/hotpoint" component={DashBoard} />
+            <Route path="/main/hotzone" component={HotZone} />
           </Content>
         </Layout>
       </Layout>

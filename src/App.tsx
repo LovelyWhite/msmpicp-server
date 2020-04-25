@@ -31,16 +31,18 @@ class App extends React.Component<{}, States> {
   }
 
   showError(msg: string) {
-    this.setState({
-      errorVisible: true,
-      errorMsg: msg,
-    });
+    if (!this.state.errorVisible)
+      this.setState({
+        errorVisible: true,
+        errorMsg: msg,
+      });
   }
   showWarning(msg: string) {
-    this.setState({
-      warningVisible: true,
-      warningMsg: msg,
-    });
+    if (!this.state.warningVisible)
+      this.setState({
+        warningVisible: true,
+        warningMsg: msg,
+      });
   }
   _handleWarningCb() {
     this.setState({

@@ -1,6 +1,6 @@
 import express from "express";
 import ContextDataModel from "../model/contextdata";
-import ModelModel from "../model/model";
+// import ModelModel from "../model/model";
 import DeviceModel from "../model/device";
 let router = express.Router();
 router.post("/contextdata", async (req, res) => {
@@ -54,15 +54,45 @@ router.post("/dailydata", async (req, res) => {
     res.send({ code: -2, data: {}, msg: "" + e });
   }
 });
+router.post("/todayData", async (req, res) => {
+  let now = new Date(Date.now());
+  now.setHours(0);
+  now.setMinutes(0);
+  let today = now.setSeconds(0);
+  let tomm = now.setHours(24);
+  try {
+    let result = await ContextDataModel.find({
+      "location.time": { $gte: today, $lt: tomm },
+    });
+    res.send({ code: 1, data: result.length, msg: "" });
+  } catch (e) {
+    res.send({ code: -1, data: "", msg: "" + e });
+  }
+});
 router.post("/modeldata", async (req, res) => {
   try {
-    let result = await ModelModel.aggregate([
+    let result = await DeviceModel.aggregate([
       {
         $group: {
-          _id: "$",
+          _id: "$modelId",
+          total: { $sum: 1 },
+        },
+      },
+      {
+        $lookup: {
+          from: "models",
+          localField: "_id",
+          foreignField: "_id",
+          as: "modelName",
         },
       },
     ]);
+    result.forEach((e) => {
+      let bName =
+        e.modelName[0].brandName + " " + e.modelName[0].phoneModelName;
+      delete e.modelName;
+      e.modelName = bName;
+    });
     if (result.length !== 0) {
       res.send({ code: 1, data: result, msg: "" });
     } else {
