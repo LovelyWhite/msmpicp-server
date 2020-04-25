@@ -32,7 +32,6 @@ class _Nav extends React.Component<any> {
         mode="horizontal"
       >
         <SubMenu
-          style={{ height: "100%" }}
           title={
             <SettingOutlined
               style={{

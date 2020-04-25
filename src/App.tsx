@@ -43,6 +43,10 @@ class App extends React.Component<{}, States> {
         warningVisible: true,
         warningMsg: msg,
       });
+    else
+      this.setState({
+        warningMsg: msg,
+      });
   }
   _handleWarningCb() {
     this.setState({

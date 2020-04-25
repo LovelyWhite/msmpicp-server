@@ -417,10 +417,7 @@ export default class HotZone extends React.Component<Props, States> {
   };
   renderMap() {
     this.hotZoneEchart.setOption({
-      title: {
-        text: "各地区数据量热区图",
-        left: "center",
-      },
+      title: {},
       tooltip: {
         trigger: "item",
       },

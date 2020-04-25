@@ -1,5 +1,5 @@
 import axios from "axios";
-export const URL = "http://localhost:5000";
+export const URL = "https://suxitech.work";
 export function fetchData(
   url: string,
   values: any,
