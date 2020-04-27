@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
       let deviceId: null | string = null;
       if (modelId) {
         let deviceResult = await DeviceModel.findOne({
-          modelId,
+          uniqueId: data.uniqueId,
         });
         if (deviceResult) {
           deviceId = deviceResult._id;
