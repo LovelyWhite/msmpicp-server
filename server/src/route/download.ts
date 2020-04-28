@@ -23,7 +23,7 @@ router.post("/dailydata", async (req, res) => {
           time: {
             $dateToString: {
               format: "%Y-%m-%d",
-              date: { $add: [new Date(0), "$location.time"] },
+              date: { $add: [new Date(28800000), "$location.time"] },
             },
           },
           deviceId: 1,
@@ -45,6 +45,7 @@ router.post("/dailydata", async (req, res) => {
       },
       { $sort: { _id: 1 } },
     ]);
+    console.log(result);
     if (result.length !== 0) {
       res.send({ code: 1, data: result, msg: "" });
     } else {
@@ -62,7 +63,7 @@ router.post("/todayData", async (req, res) => {
   let tomm = now.setHours(24);
   try {
     let result = await ContextDataModel.find({
-      "location.time": { $gte: today, $lt: tomm },
+      "location.time": { $gt: today, $lt: tomm },
     });
     res.send({ code: 1, data: result.length, msg: "" });
   } catch (e) {

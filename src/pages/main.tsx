@@ -41,7 +41,7 @@ export default class Main extends React.Component<Props, States> {
           <Sider width={170} style={{ backgroundColor: "#00000000" }}>
             <LeftMenu />
           </Sider>
-          <Content style={{ padding: 15 }}>
+          <Content>
             <Route path="/main/dash" component={DashBoard} />
             <Route path="/main/hotzone" component={HotZone} />
           </Content>

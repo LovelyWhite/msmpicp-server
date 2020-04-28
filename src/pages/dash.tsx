@@ -61,14 +61,6 @@ export default class DashBoard extends React.Component<Props, States> {
       }
     }
   }
-  // async getKeyValue(){
-  //   let todayData = await fetchData("/download/todayData",{},undefined,this.token);
-  //   if (todayData && todayData.data) {
-  //     if (todayData.data.code === 1) {}else {
-  //       showError(todayData.data.msg);
-  //     }
-  //   }
-  // }
   async getModelData() {
     try {
       let result = await fetchData(
@@ -96,24 +88,30 @@ export default class DashBoard extends React.Component<Props, States> {
                 name: "机型",
                 type: "category",
                 data: xAxisData,
+                axisLabel: {
+                  fontSize: 10,
+                  formatter: (arg: string) => {
+                    return arg.replace(" ", "\n");
+                  },
+                },
               },
             ],
             grid: {
               top: 30,
-              bottom: 30,
+              bottom: 60,
               right: 40,
             },
+            dataZoom: [
+              {
+                type: "slider",
+              },
+            ],
             yAxis: [
               {
                 minInterval: 1,
                 type: "value",
                 name: "台",
                 show: true,
-                axisLine: {
-                  lineStyle: {
-                    color: "#5793f3",
-                  },
-                },
               },
             ],
             series: [
@@ -159,24 +157,27 @@ export default class DashBoard extends React.Component<Props, States> {
                 name: "日期",
                 type: "category",
                 data: xAxisData,
+                axisLabel: {
+                  fontSize: 10,
+                },
               },
             ],
             grid: {
               top: 30,
-              bottom: 30,
+              bottom: 60,
               right: 40,
             },
+            dataZoom: [
+              {
+                type: "slider",
+              },
+            ],
             yAxis: [
               {
                 minInterval: 1,
                 type: "value",
                 name: "数据量",
                 show: true,
-                axisLine: {
-                  lineStyle: {
-                    color: "#5793f3",
-                  },
-                },
               },
             ],
             series: [
@@ -350,8 +351,8 @@ export default class DashBoard extends React.Component<Props, States> {
 const styles = {
   graphContainer: {
     float: "left",
-    height: 180,
-    width: 300,
+    height: 350,
+    width: 600,
     minHeight: 200,
     minWidth: 270,
     padding: "15px 10px 5px 3px",

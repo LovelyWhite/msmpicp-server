@@ -23,7 +23,7 @@ class _LeftMenu extends React.Component<any> {
         defaultSelectedKeys={["1"]}
         mode="inline"
         theme="light"
-        style={{ width: 170, height: "100%" }}
+        style={{ height: "100%" }}
         // onClick={(pram) => {
         //   console.log(pram);
         // }}
