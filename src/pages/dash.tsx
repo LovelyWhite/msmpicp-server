@@ -34,6 +34,7 @@ export default class DashBoard extends React.Component<Props, States> {
       maxMagnetic: -1,
     };
     this.token = localStorage.getItem("token");
+    console.log(this.token);
     this.getDailyData = this.getDailyData.bind(this);
     this.getModelData = this.getModelData.bind(this);
     this.getKeyValue = this.getKeyValue.bind(this);

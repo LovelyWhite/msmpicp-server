@@ -49,6 +49,7 @@ export default class Login extends React.Component<Props, States> {
   }
   componentDidMount() {
     if (localStorage.getItem("token")) {
+      console.log(localStorage.getItem("token"))
       this.props.history.push("/main/dash");
     }
   }

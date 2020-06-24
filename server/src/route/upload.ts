@@ -21,6 +21,7 @@ router.post("/", async (req, res) => {
         let modelDoc = new ModelModel({
           brandName: data.brand,
           phoneModelName: data.model,
+          sensorInfo:data.sensorInfo
         });
         let insertRs = await modelDoc.save();
         insertRs && (modelId = insertRs._id);

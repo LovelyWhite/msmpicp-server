@@ -2,6 +2,7 @@ export interface DeviceUploadData {
   uniqueId: string;
   model: string;
   brand: string;
+  sensorInfo:string;
   data: ContextData[];
 }
 export interface ThreeAxisMeasurement {

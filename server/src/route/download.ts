@@ -3,7 +3,7 @@ import ContextDataModel from "../model/contextdata";
 // import ModelModel from "../model/model";
 import DeviceModel from "../model/device";
 let router = express.Router();
-router.post("/contextdata", async (req, res) => {
+router.get("/contextdata", async (req, res) => {
   try {
     let result = await ContextDataModel.find({});
     if (result.length !== 0) {
@@ -15,7 +15,7 @@ router.post("/contextdata", async (req, res) => {
     res.send({ code: -2, data: {}, msg: "" + e });
   }
 });
-router.post("/dailydata", async (req, res) => {
+router.get("/dailydata", async (req, res) => {
   try {
     let result = await ContextDataModel.aggregate([
       {
@@ -55,7 +55,7 @@ router.post("/dailydata", async (req, res) => {
     res.send({ code: -2, data: {}, msg: "" + e });
   }
 });
-router.post("/todayData", async (req, res) => {
+router.get("/todayData", async (req, res) => {
   let now = new Date(Date.now());
   now.setHours(0);
   now.setMinutes(0);
@@ -70,7 +70,7 @@ router.post("/todayData", async (req, res) => {
     res.send({ code: -1, data: "", msg: "" + e });
   }
 });
-router.post("/modeldata", async (req, res) => {
+router.get("/modeldata", async (req, res) => {
   try {
     let result = await DeviceModel.aggregate([
       {
