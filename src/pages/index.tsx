@@ -116,9 +116,9 @@ export default class Login extends React.Component<Props, States> {
               >
                 登陆
               </Button>
-              <Button type="ghost" className="login-form-button">
+              {/* <Button type="ghost" className="login-form-button">
                 注册
-              </Button>
+              </Button> */}
             </Space>
           </Space>
         </Col>

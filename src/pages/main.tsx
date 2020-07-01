@@ -1,13 +1,12 @@
 import React from "react";
 import "antd/dist/antd.css";
-import LeftMenu from "../components/menu";
 import Nav from "../components/nav";
 import { Layout } from "antd";
 import { Route } from "react-router-dom";
 import DashBoard from "./dash";
-import HotZone from "./hotzone";
+import Chart from "./chart";
 const { Header, Content, Sider } = Layout;
-interface States {}
+interface States { }
 interface Props {
   history: any;
 }
@@ -38,13 +37,8 @@ export default class Main extends React.Component<Props, States> {
           <Nav />
         </Header>
         <Layout>
-          <Sider width={170} style={{ backgroundColor: "#00000000" }}>
-            <LeftMenu />
-          </Sider>
-          <Content>
-            <Route path="/main/dash" component={DashBoard} />
-            <Route path="/main/hotzone" component={HotZone} />
-          </Content>
+          <Route path="/main/dash" component={DashBoard} />
+          <Route path="/main/chart" component={Chart} />
         </Layout>
       </Layout>
     );

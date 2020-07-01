@@ -1,8 +1,8 @@
 import React from "react";
 import { Menu, Row, Space } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
+import { SettingOutlined, AreaChartOutlined, DashboardOutlined } from "@ant-design/icons";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 
 const { SubMenu } = Menu;
 
@@ -18,7 +18,7 @@ class _Nav extends React.Component<any> {
 
   handleClick = (e: { key: any }) => {
     console.log("click ", e);
-    if(e.key==="setting:2"){
+    if (e.key === "setting:2") {
       localStorage.removeItem("token");
     }
     this.setState({
@@ -34,6 +34,28 @@ class _Nav extends React.Component<any> {
         selectedKeys={[this.state.current]}
         mode="horizontal"
       >
+        <Menu.Item
+          key={"home"}
+        >
+          <Link to="/main/dash">
+            <DashboardOutlined
+              style={{
+                marginRight: 0,
+              }}
+            />
+          </Link>
+        </Menu.Item>
+        <Menu.Item
+          key={"chart"}
+        >
+          <Link to="/main/chart">
+          <AreaChartOutlined
+            style={{
+              marginRight: 0,
+            }}
+            />
+          </Link>
+        </Menu.Item>
         <SubMenu
           title={
             <SettingOutlined
@@ -43,8 +65,7 @@ class _Nav extends React.Component<any> {
             />
           }
         >
-          <Menu.Item key="setting:1">管理员</Menu.Item>
-          <Menu.Item key="setting:2">退出</Menu.Item>
+          <Menu.Item key="exit">退出</Menu.Item>
         </SubMenu>
       </Menu>
     );
