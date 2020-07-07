@@ -2,12 +2,13 @@ import React from "react";
 import { Input, Button, Checkbox, Col, Space } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
-import { fetchData, showError, showWarning } from "../utils";
+import { fetchData, showError} from "../utils";
 import { AxiosResponse } from "axios";
 interface States {
   isLogining: boolean;
   userName: string;
   password: string;
+  remember: boolean;
 }
 interface Props {
   history: any;
@@ -17,6 +18,7 @@ export default class Login extends React.Component<Props, States> {
     super(props);
     this.state = {
       isLogining: false,
+      remember: false,
       userName: "",
       password: "",
     };
@@ -39,7 +41,7 @@ export default class Login extends React.Component<Props, States> {
       });
       if (result && result.data) {
         if (result.data.code !== 1) {
-          showWarning(result.data.msg);
+          showError(result.data.msg);
         } else {
           localStorage.setItem("token", result.data.data.token);
           this.props.history.push("/main/dash");
@@ -49,7 +51,7 @@ export default class Login extends React.Component<Props, States> {
   }
   componentDidMount() {
     if (localStorage.getItem("token")) {
-      console.log(localStorage.getItem("token"))
+      console.log(localStorage.getItem("token"));
       this.props.history.push("/main/dash");
     }
   }
@@ -105,9 +107,6 @@ export default class Login extends React.Component<Props, States> {
               />
             </Space>
             <Space>
-              <Checkbox> 记住我</Checkbox>
-            </Space>
-            <Space>
               <Button
                 loading={this.state.isLogining}
                 type="primary"
@@ -116,9 +115,6 @@ export default class Login extends React.Component<Props, States> {
               >
                 登陆
               </Button>
-              {/* <Button type="ghost" className="login-form-button">
-                注册
-              </Button> */}
             </Space>
           </Space>
         </Col>

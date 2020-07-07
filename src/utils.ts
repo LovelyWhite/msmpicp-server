@@ -58,3 +58,29 @@ export function showWarning(msg: string) {
 export function showError(msg: string) {
   global["showError"](msg);
 }
+export function disableWarning() {
+  global["disableWarning"]();
+}
+export function disableError() {
+  global["disableError"]();
+}
+export function getTimeString(timestamp: number): string {
+  let now = new Date(Date.now());
+  let msg = new Date(timestamp);
+  let msgDate = msg.getDate();
+  let msgYear = msg.getFullYear();
+  let msgMouth = msg.getMonth() + 1;
+  let msgHours = msg.getHours();
+  let msgMinutes = msg.getMinutes();
+  return (
+    msgYear +
+    "-" +
+    msgMouth +
+    "-" +
+    msgDate +
+    " " +
+    msgHours +
+    ":" +
+    msgMinutes
+  );
+}

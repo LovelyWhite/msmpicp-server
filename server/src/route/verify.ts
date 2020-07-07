@@ -43,11 +43,11 @@ router.post("/login", async (req, res) => {
 
     let result = await UserModel.findOne(data);
     if (result) {
-      const token = "Bearer "+jwt.sign(
+      const token = jwt.sign(
         {
           id:result._id
         },
-        'Mishiweilai123',
+        'Mishiweilai123',   
         {
           expiresIn: "10h"
         }

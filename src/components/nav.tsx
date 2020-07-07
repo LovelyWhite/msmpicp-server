@@ -18,8 +18,9 @@ class _Nav extends React.Component<any> {
 
   handleClick = (e: { key: any }) => {
     console.log("click ", e);
-    if (e.key === "setting:2") {
+    if (e.key === "exit") {
       localStorage.removeItem("token");
+      this.props.history.push("/")
     }
     this.setState({
       current: e.key,

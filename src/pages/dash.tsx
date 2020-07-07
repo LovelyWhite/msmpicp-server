@@ -33,33 +33,38 @@ export default class DashBoard extends React.Component<Props, States> {
       popularRegion: "",
       maxMagnetic: -1,
     };
-    this.token = localStorage.getItem("token");
-    console.log(this.token);
+   
     this.getDailyData = this.getDailyData.bind(this);
     this.getModelData = this.getModelData.bind(this);
     this.getKeyValue = this.getKeyValue.bind(this);
   }
   componentDidMount() {
+    this.token =  localStorage.getItem("token")
     this.getDailyData();
     this.getModelData();
     this.getKeyValue();
   }
   //获取关键信息
   async getKeyValue() {
-    let todayData = await fetchData(
-      "/download/todayData",
-      {},
-      undefined,
-      this.token
-    );
-    if (todayData && todayData.data) {
-      if (todayData.data.code === 1) {
-        this.setState({
-          todayData: todayData.data.data,
-        });
-      } else {
-        showError(todayData.data.msg);
+    try{
+      let todayData = await fetchData(
+        "/download/todayData",
+        {},
+        undefined,
+        this.token
+      );
+      if (todayData && todayData.data) {
+        if (todayData.data.code === 1) {
+          this.setState({
+            todayData: todayData.data.data,
+          });
+        } else {
+          showError(todayData.data.msg);
+        }
       }
+    }catch(e){
+      showError(e + "");
+      console.log(e);
     }
   }
   async getModelData() {
@@ -129,6 +134,7 @@ export default class DashBoard extends React.Component<Props, States> {
         }
       }
     } catch (e) {
+      showError(e + "");
       console.log(e);
     }
   }

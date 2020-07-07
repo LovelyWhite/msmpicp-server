@@ -2,7 +2,7 @@ import React from "react";
 import "antd/dist/antd.css";
 import Nav from "../components/nav";
 import { Layout } from "antd";
-import { Route } from "react-router-dom";
+import { Route ,Switch} from "react-router-dom";
 import DashBoard from "./dash";
 import Chart from "./chart";
 const { Header, Content, Sider } = Layout;
@@ -37,8 +37,10 @@ export default class Main extends React.Component<Props, States> {
           <Nav />
         </Header>
         <Layout>
+        <Switch>
           <Route path="/main/dash" component={DashBoard} />
           <Route path="/main/chart" component={Chart} />
+          </Switch>
         </Layout>
       </Layout>
     );

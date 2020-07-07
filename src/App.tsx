@@ -25,15 +25,35 @@ class App extends React.Component<{}, States> {
     };
     this.showError = this.showError.bind(this);
     this.showWarning = this.showWarning.bind(this);
+    this.disableWarning = this.disableWarning.bind(this);
+    this.disableError = this.disableError.bind(this);
     this._handleWarningCb = this._handleWarningCb.bind(this);
     global["showWarning"] = this.showWarning;
     global["showError"] = this.showError;
+    global["disableWarning"] = this.disableWarning;
+    global["disableError"] = this.disableError;
   }
 
+  disableWarning() {
+    if (!this.state.warningVisible)
+    this.setState({
+      warningVisible: false,
+    });
+  }
+  disableError() {
+    if (this.state.errorVisible)
+      this.setState({
+        errorVisible: false,
+      });
+  }
   showError(msg: string) {
     if (!this.state.errorVisible)
       this.setState({
         errorVisible: true,
+        errorMsg: msg,
+      });
+    else
+      this.setState({
         errorMsg: msg,
       });
   }

@@ -1,11 +1,56 @@
 import express from "express";
 import ContextDataModel from "../model/contextdata";
 // import ModelModel from "../model/model";
+import mongoose from "mongoose";
 import DeviceModel from "../model/device";
+const ObjectId = require("mongoose").Types.ObjectId;
 let router = express.Router();
 router.post("/contextdata", async (req, res) => {
+  //   maxLat: 12
+  // maxLng: 12
+  // minLat: 12
+  // minLng: 12
+  // startTime: 1596556800000
+  // stopTime: 1597248000000
+  let data = req.body;
+  console.log(data);
   try {
-    let result = await ContextDataModel.find({});
+    let searchData = [];
+    if (data.startTime != undefined && data.stopTime != undefined) {
+      searchData.push({ "location.time": { $gt: data.startTime } });
+      searchData.push({ "location.time": { $lt: data.stopTime } });
+    }
+    if (data.phoneModel) {
+      let devices = await DeviceModel.find({
+        modelId: data.phoneModel,
+      });
+      searchData.push({
+        deviceId: {
+          $in: devices.map((v) => {
+            return new ObjectId(v._id);
+          }),
+        },
+      });
+    }
+    if(data.minLat){
+      searchData.push({ "location.latitude": { $gt: data.minLat } });
+    }
+    if(data.maxLat){
+      searchData.push({ "location.latitude": { $lt: data.maxLat } });
+    }
+    if(data.minLng){
+      searchData.push({ "location.longitude": { $gt: data.minLng } });
+    }
+    if(data.maxLng){
+      searchData.push({ "location.longitude": { $lt: data.maxLng } });
+    }
+    let result = await ContextDataModel.find(
+      JSON.stringify(data) == "{}"
+        ? {}
+        : {
+            $and: searchData,
+          }
+    );
     if (result.length !== 0) {
       res.send({ code: 1, data: result, msg: "" });
     } else {
