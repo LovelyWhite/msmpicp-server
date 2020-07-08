@@ -36,8 +36,8 @@ export interface ContextData {
   magnetometerData: ThreeAxisMeasurement;
 }
 
-// export const URL = "https://suxitech.work";
-export const URL = "http://127.0.0.1:3001";
+export const URL = "https://suxitech.work/server";
+// export const URL = "http://127.0.0.1:3001";
 export function fetchData(
   url: string,
   values: any,

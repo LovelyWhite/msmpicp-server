@@ -13,9 +13,9 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use((req, res, next) => {
   let authorization = req.get("Authorization");
-  if (req.path === "/verify/login") {
+  if (req.path.includes("/verify/login")) {
     next();
-  } else if (req.path === "/verify/sign") {
+  } else if (req.path.includes("/verify/sign")) {
     next();
   } else {
     jwt.verify(authorization?.toString()+"", "Mishiweilai123", function (err, decode) {
@@ -27,10 +27,10 @@ app.use((req, res, next) => {
     });
   }
 });
-app.use("/", indexRouter);
-app.use("/upload", uploadRouter);
-app.use("/verify", verifyRouter);
-app.use("/download", downloadRouter);
+app.use("/server", indexRouter);
+app.use("/server/upload", uploadRouter);
+app.use("/server/verify", verifyRouter);
+app.use("/server/download", downloadRouter);
 
 main();
 app.listen(3001, () => {
