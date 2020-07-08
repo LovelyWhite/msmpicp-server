@@ -79,7 +79,7 @@ class App extends React.Component<{}, States> {
     return (
       <Col style={{ height: "100%" }}>
         {errorVisible ? (
-          <Alert type="error" message={this.state.errorMsg} banner />
+          <Alert type="error" message={this.state.errorMsg} banner closable={true}/>
         ) : null}
         {warningVisible ? (
           <Alert

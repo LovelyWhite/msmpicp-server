@@ -1,6 +1,13 @@
 import "./styles.css";
 import React from "react";
-import { fetchData, showError, ContextData, getTimeString, disableWarning, disableError } from "../utils";
+import {
+  fetchData,
+  showError,
+  ContextData,
+  getTimeString,
+  disableWarning,
+  disableError,
+} from "../utils";
 import {
   Table,
   Space,
@@ -11,11 +18,13 @@ import {
   Tag,
   Spin,
 } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, FileExcelOutlined } from "@ant-design/icons";
 import "echarts";
+import FileSaver from "file-saver";
 import ECharts from "echarts/lib/echarts";
 import theme from "../static/theme.json";
 import Column from "antd/lib/table/Column";
+import { Parser } from "json2csv";
 interface Props {
   history: any;
 }
@@ -31,6 +40,7 @@ interface States {
   startTime: number;
   stopTime: number;
   contextDataLoading: boolean;
+  exportLoading: boolean;
 }
 ECharts.registerTheme("walden", theme);
 export default class Chart extends React.Component<Props, States> {
@@ -40,6 +50,7 @@ export default class Chart extends React.Component<Props, States> {
     this.state = {
       phoneModelLoading: true,
       contextDataLoading: false,
+      exportLoading: false,
       phoneModelList: [],
       dataSource: [],
       minLng: undefined,
@@ -51,6 +62,7 @@ export default class Chart extends React.Component<Props, States> {
       stopTime: undefined,
     };
     this.getContextData = this.getContextData.bind(this);
+    this.exportExcel = this.exportExcel.bind(this);
   }
   componentDidMount() {
     this.token = localStorage.getItem("token");
@@ -60,7 +72,7 @@ export default class Chart extends React.Component<Props, States> {
   async getContextData() {
     this.setState({
       contextDataLoading: true,
-      dataSource:[]
+      dataSource: [],
     });
     disableError();
     let {
@@ -90,7 +102,7 @@ export default class Chart extends React.Component<Props, States> {
       if (contextData && contextData.data) {
         if (contextData.data.code === 1) {
           this.setState({
-            dataSource: contextData.data.data?contextData.data.data:[],
+            dataSource: contextData.data.data ? contextData.data.data : [],
           });
         } else {
           showError(contextData.data.msg);
@@ -102,6 +114,38 @@ export default class Chart extends React.Component<Props, States> {
     } finally {
       this.setState({
         contextDataLoading: false,
+      });
+    }
+  }
+  async exportExcel() {
+    if (this.state.dataSource.length == 0) {
+      showError("当前搜索结果为空");
+    } else {
+      this.setState({
+        exportLoading: true,
+      });
+      String.prototype["replaceAll"] = function (s1, s2) {
+        return this.replace(new RegExp(s1, "gm"), s2);
+      };
+      let r: any = JSON.stringify(this.state.dataSource);
+      r = r.replaceAll("magnetometerData", "磁力计");
+      r = r.replaceAll("gyroscopeData", "陀螺仪");
+      r = r.replaceAll("barometerData", "气压计");
+      r = r.replaceAll("accelerometerData", "加速度计");
+      r = r.replaceAll("relativeAltitude", "相对海拔");
+      r = r.replaceAll("location", "位置");
+      r = r.replaceAll("pressure", "气压");
+      r = r.replaceAll("altitude", "海拔");
+      r = r.replaceAll("accuracy", "精确度");
+      r = r.replaceAll("longitude", "经度");
+      r = r.replaceAll("latitude", "纬度");
+      r = r.replaceAll("provider", "位置提供");
+      const json2csvParser = new Parser();
+      const csv = json2csvParser.parse(JSON.parse(r));
+      let blob = new Blob([csv], { type: "text/plain;charset=utf-8" });
+      FileSaver.saveAs(blob, new Date().getTime()+".csv");
+      this.setState({
+        exportLoading: false,
       });
     }
   }
@@ -157,10 +201,12 @@ export default class Chart extends React.Component<Props, States> {
                 value={this.state.minLng}
                 style={{ width: 100, textAlign: "center" }}
                 placeholder="最小经度"
-                onChange={(e)=>{
+                onChange={(e) => {
                   this.setState({
-                    minLng:Number.parseFloat(e.currentTarget.value)?Number.parseFloat(e.currentTarget.value):undefined
-                  })
+                    minLng: Number.parseFloat(e.currentTarget.value)
+                      ? Number.parseFloat(e.currentTarget.value)
+                      : undefined,
+                  });
                 }}
               />
               <Input
@@ -182,10 +228,12 @@ export default class Chart extends React.Component<Props, States> {
                   width: 100,
                   textAlign: "center",
                 }}
-                onChange={(e)=>{
+                onChange={(e) => {
                   this.setState({
-                    maxLng:Number.parseFloat(e.currentTarget.value)?Number.parseFloat(e.currentTarget.value):undefined
-                  })
+                    maxLng: Number.parseFloat(e.currentTarget.value)
+                      ? Number.parseFloat(e.currentTarget.value)
+                      : undefined,
+                  });
                 }}
                 placeholder="最大经度"
               />
@@ -196,10 +244,12 @@ export default class Chart extends React.Component<Props, States> {
                 value={this.state.minLat}
                 style={{ width: 100, textAlign: "center" }}
                 placeholder="最小纬度"
-                onChange={(e)=>{
+                onChange={(e) => {
                   this.setState({
-                    minLat:Number.parseFloat(e.currentTarget.value)?Number.parseFloat(e.currentTarget.value):undefined
-                  })
+                    minLat: Number.parseFloat(e.currentTarget.value)
+                      ? Number.parseFloat(e.currentTarget.value)
+                      : undefined,
+                  });
                 }}
               />
               <Input
@@ -222,10 +272,12 @@ export default class Chart extends React.Component<Props, States> {
                   textAlign: "center",
                 }}
                 placeholder="最大纬度"
-                onChange={(e)=>{
+                onChange={(e) => {
                   this.setState({
-                    maxLat:Number.parseFloat(e.currentTarget.value)?Number.parseFloat(e.currentTarget.value):undefined
-                  })
+                    maxLat: Number.parseFloat(e.currentTarget.value)
+                      ? Number.parseFloat(e.currentTarget.value)
+                      : undefined,
+                  });
                 }}
               />
             </Input.Group>
@@ -234,7 +286,7 @@ export default class Chart extends React.Component<Props, States> {
               style={{ width: 200 }}
               onChange={(value) => {
                 this.setState({
-                  phoneModel: value?value:undefined,
+                  phoneModel: value ? value : undefined,
                 });
               }}
               loading={this.state.phoneModelLoading}
@@ -268,6 +320,14 @@ export default class Chart extends React.Component<Props, States> {
               icon={<SearchOutlined />}
             >
               筛选
+            </Button>
+            <Button
+              type="ghost"
+              loading={this.state.exportLoading}
+              onClick={this.exportExcel}
+              icon={<FileExcelOutlined />}
+            >
+              导出
             </Button>
           </Space>
         </div>

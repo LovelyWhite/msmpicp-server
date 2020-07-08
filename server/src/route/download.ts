@@ -6,12 +6,7 @@ import DeviceModel from "../model/device";
 const ObjectId = require("mongoose").Types.ObjectId;
 let router = express.Router();
 router.post("/contextdata", async (req, res) => {
-  //   maxLat: 12
-  // maxLng: 12
-  // minLat: 12
-  // minLng: 12
-  // startTime: 1596556800000
-  // stopTime: 1597248000000
+
   let data = req.body;
   console.log(data);
   try {

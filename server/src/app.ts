@@ -13,12 +13,15 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use((req, res, next) => {
   let authorization = req.get("Authorization");
-  if (req.path.includes("/verify/login")) {
+  if (req.path.includes("/verify")) {
     next();
-  } else if (req.path.includes("/verify/sign")) {
+  } else if (req.path.includes("/upload")) {
     next();
   } else {
-    jwt.verify(authorization?.toString()+"", "Mishiweilai123", function (err, decode) {
+    jwt.verify(authorization?.toString() + "", "Mishiweilai123", function (
+      err,
+      decode
+    ) {
       if (err) {
         res.send({ code: -1, data: undefined, msg: "Token失效请重新登陆" });
       } else {
