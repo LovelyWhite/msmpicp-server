@@ -137,22 +137,22 @@ export default class Chart extends React.Component<Props, States> {
         return this.replace(new RegExp(s1, "gm"), s2);
       };
       let _data: {
+        日期: string;
+        时间: string;
+        经度: number;
+        纬度: number;
+        海拔: number;
         "磁场(x)": number;
         "磁场(y)": number;
         "磁场(z)": number;
         "姿态(x)": number;
         "姿态(y)": number;
         "姿态(z)": number;
-        海拔: number;
         气压: number;
         "加速度(x)": number;
         "加速度(y)": number;
         "加速度(z)": number;
-        日期: string;
-        时间: string;
         "位置(精确度)": number;
-        经度: number;
-        纬度: number;
         品牌名:string,
         设备名称:string;
       }[] = [];
@@ -165,22 +165,23 @@ export default class Chart extends React.Component<Props, States> {
         let msgMinutes = msg.getMinutes();
         let msgSecond = msg.getSeconds();
         _data.push({
+          日期: msgYear + "-" + msgMouth + "-" + msgDate,
+          时间: msgHours + ":" + msgMinutes+":"+msgSecond,
+          经度: e.location.longitude,
+          纬度: e.location.latitude,
+          海拔: e.location.altitude,
           "磁场(x)": e.magnetometerData.x,
           "磁场(y)": e.magnetometerData.y,
           "磁场(z)": e.magnetometerData.z,
           "姿态(x)": e.gyroscopeData.x,
           "姿态(y)": e.gyroscopeData.y,
           "姿态(z)": e.gyroscopeData.z,
-          海拔: e.location.altitude,
           气压: e.barometerData.pressure,
           "加速度(x)": e.accelerometerData.x,
           "加速度(y)": e.accelerometerData.y,
           "加速度(z)": e.accelerometerData.z,
-          日期: msgYear + "-" + msgMouth + "-" + msgDate,
-          时间: msgHours + ":" + msgMinutes+":"+msgSecond,
           "位置(精确度)": e.location.accuracy,
-          经度: e.location.longitude,
-          纬度: e.location.latitude,
+         
           品牌名:e.model[0].brandName,
           设备名称:e.model[0].phoneModelName,
         });
