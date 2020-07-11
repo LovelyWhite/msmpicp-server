@@ -36,6 +36,8 @@ interface States {
   maxLng: number;
   minLat: number;
   maxLat: number;
+  limit: number;
+  skip: number;
   phoneModel: string;
   startTime: number;
   stopTime: number;
@@ -60,6 +62,8 @@ export default class Chart extends React.Component<Props, States> {
       phoneModel: undefined,
       startTime: undefined,
       stopTime: undefined,
+      limit:undefined,
+      skip:undefined,
     };
     this.getContextData = this.getContextData.bind(this);
     this.exportExcel = this.exportExcel.bind(this);
@@ -83,6 +87,8 @@ export default class Chart extends React.Component<Props, States> {
       phoneModel,
       startTime,
       stopTime,
+      skip,
+      limit
     } = this.state;
     try {
       let contextData = await fetchData(
@@ -95,12 +101,15 @@ export default class Chart extends React.Component<Props, States> {
           phoneModel,
           startTime,
           stopTime,
+          skip,
+          limit
         },
         undefined,
         this.token
       );
       if (contextData && contextData.data) {
         if (contextData.data.code === 1) {
+          console.log(contextData.data.data);
           this.setState({
             dataSource: contextData.data.data ? contextData.data.data : [],
           });
@@ -127,23 +136,60 @@ export default class Chart extends React.Component<Props, States> {
       String.prototype["replaceAll"] = function (s1, s2) {
         return this.replace(new RegExp(s1, "gm"), s2);
       };
-      let r: any = JSON.stringify(this.state.dataSource);
-      r = r.replaceAll("magnetometerData", "磁力计");
-      r = r.replaceAll("gyroscopeData", "陀螺仪");
-      r = r.replaceAll("barometerData", "气压计");
-      r = r.replaceAll("accelerometerData", "加速度计");
-      r = r.replaceAll("relativeAltitude", "相对海拔");
-      r = r.replaceAll("location", "位置");
-      r = r.replaceAll("pressure", "气压");
-      r = r.replaceAll("altitude", "海拔");
-      r = r.replaceAll("accuracy", "精确度");
-      r = r.replaceAll("longitude", "经度");
-      r = r.replaceAll("latitude", "纬度");
-      r = r.replaceAll("provider", "位置提供");
+      let _data: {
+        "磁场(x)": number;
+        "磁场(y)": number;
+        "磁场(z)": number;
+        "姿态(x)": number;
+        "姿态(y)": number;
+        "姿态(z)": number;
+        海拔: number;
+        气压: number;
+        "加速度(x)": number;
+        "加速度(y)": number;
+        "加速度(z)": number;
+        日期: string;
+        时间: string;
+        "位置(精确度)": number;
+        经度: number;
+        纬度: number;
+        品牌名:string,
+        设备名称:string;
+      }[] = [];
+      this.state.dataSource.forEach((e: any) => {
+        let msg = new Date(e.location.time);
+        let msgDate = msg.getDate();
+        let msgYear = msg.getFullYear();
+        let msgMouth = msg.getMonth() + 1;
+        let msgHours = msg.getHours();
+        let msgMinutes = msg.getMinutes();
+        let msgSecond = msg.getSeconds();
+        _data.push({
+          "磁场(x)": e.magnetometerData.x,
+          "磁场(y)": e.magnetometerData.y,
+          "磁场(z)": e.magnetometerData.z,
+          "姿态(x)": e.gyroscopeData.x,
+          "姿态(y)": e.gyroscopeData.y,
+          "姿态(z)": e.gyroscopeData.z,
+          海拔: e.location.altitude,
+          气压: e.barometerData.pressure,
+          "加速度(x)": e.accelerometerData.x,
+          "加速度(y)": e.accelerometerData.y,
+          "加速度(z)": e.accelerometerData.z,
+          日期: msgYear + "-" + msgMouth + "-" + msgDate,
+          时间: msgHours + ":" + msgMinutes+":"+msgSecond,
+          "位置(精确度)": e.location.accuracy,
+          经度: e.location.longitude,
+          纬度: e.location.latitude,
+          品牌名:e.model[0].brandName,
+          设备名称:e.model[0].phoneModelName,
+        });
+      });
+      let r: any = JSON.stringify(_data);
       const json2csvParser = new Parser();
       const csv = json2csvParser.parse(JSON.parse(r));
       let blob = new Blob([csv], { type: "text/plain;charset=utf-8" });
-      FileSaver.saveAs(blob, new Date().getTime()+".csv");
+      FileSaver.saveAs(blob, getTimeString(new Date().getTime()) + ".csv");
       this.setState({
         exportLoading: false,
       });
@@ -282,7 +328,7 @@ export default class Chart extends React.Component<Props, States> {
               />
             </Input.Group>
             <Select
-              defaultValue="手机型号"
+              defaultValue="手机型号（全部）"
               style={{ width: 200 }}
               onChange={(value) => {
                 this.setState({
@@ -291,7 +337,7 @@ export default class Chart extends React.Component<Props, States> {
               }}
               loading={this.state.phoneModelLoading}
             >
-              <Select.Option value={undefined}>全部</Select.Option>
+              <Select.Option value={undefined}>手机型号（全部）</Select.Option>
               {this.state.phoneModelList.map((v: any, i) => {
                 return (
                   <Select.Option key={i} value={v._id}>
@@ -312,6 +358,40 @@ export default class Chart extends React.Component<Props, States> {
               }}
               placeholder={["开始时间", "结束时间"]}
               style={{ width: 260 }}
+            />
+            <Input
+              type="number"
+              value={this.state.skip}
+              className="site-input-right"
+              style={{
+                width: 150,
+                textAlign: "center",
+              }}
+              placeholder="跳过数据条数(0)"
+              onChange={(e) => {
+                this.setState({
+                  skip: Number.parseInt(e.currentTarget.value)
+                    ? Number.parseInt(e.currentTarget.value)
+                    : undefined,
+                });
+              }}
+            />
+            <Input
+              type="number"
+              value={this.state.limit}
+              className="site-input-right"
+              style={{
+                width: 150,
+                textAlign: "center",
+              }}
+              placeholder="数据总量(100)"
+              onChange={(e) => {
+                this.setState({
+                  limit: Number.parseInt(e.currentTarget.value)
+                    ? Number.parseInt(e.currentTarget.value)
+                    : undefined,
+                });
+              }}
             />
             <Button
               type="primary"
@@ -374,7 +454,7 @@ export default class Chart extends React.Component<Props, States> {
                       海拔:{data.altitude}
                     </Tag>
                     <Tag color="purple" key="accuracy">
-                      经度:{data.accuracy}
+                      位置精确度:{data.accuracy}
                     </Tag>
                   </Space>
                 )}
@@ -424,6 +504,21 @@ export default class Chart extends React.Component<Props, States> {
                   <Space direction="vertical">
                     <Tag color="red" key="pressure">
                       气压:{data.pressure}
+                    </Tag>
+                  </Space>
+                )}
+              />
+              <Column
+                title="设备信息"
+                dataIndex="model"
+                key="model"
+                render={(data) => (
+                  <Space direction="vertical">
+                    <Tag color="yellow" key="pressure">
+                      品牌名:{data[0].brandName}
+                    </Tag>
+                    <Tag color="yellow" key="pressure">
+                      设备名称:{data[0].phoneModelName}
                     </Tag>
                   </Space>
                 )}

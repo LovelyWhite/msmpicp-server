@@ -30,7 +30,7 @@ export default class Main extends React.Component<Props, States> {
           }}
         >
           <img
-            width={521 / 3}
+            width={300}
             src={process.env.PUBLIC_URL + "/intro.png"}
             alt="首页图标"
           />

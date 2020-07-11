@@ -6,14 +6,15 @@ import DeviceModel from "../model/device";
 const ObjectId = require("mongoose").Types.ObjectId;
 let router = express.Router();
 router.post("/contextdata", async (req, res) => {
-
   let data = req.body;
   console.log(data);
+  let empty:boolean = true;
   try {
     let searchData = [];
     if (data.startTime != undefined && data.stopTime != undefined) {
       searchData.push({ "location.time": { $gt: data.startTime } });
       searchData.push({ "location.time": { $lt: data.stopTime } });
+      empty=false
     }
     if (data.phoneModel) {
       let devices = await DeviceModel.find({
@@ -26,26 +27,47 @@ router.post("/contextdata", async (req, res) => {
           }),
         },
       });
+      empty=false
     }
-    if(data.minLat){
+    if (data.minLat) {
       searchData.push({ "location.latitude": { $gt: data.minLat } });
+      empty=false
     }
-    if(data.maxLat){
+    if (data.maxLat) {
       searchData.push({ "location.latitude": { $lt: data.maxLat } });
+      empty=false
     }
-    if(data.minLng){
+    if (data.minLng) {
       searchData.push({ "location.longitude": { $gt: data.minLng } });
+      empty=false
     }
-    if(data.maxLng){
+    if (data.maxLng) {
       searchData.push({ "location.longitude": { $lt: data.maxLng } });
+      empty=false
     }
-    let result = await ContextDataModel.find(
-      JSON.stringify(data) == "{}"
-        ? {}
-        : {
-            $and: searchData,
-          }
-    );
+    let result = await ContextDataModel.aggregate([
+      {
+        $match:
+           empty ? {}
+            : {
+                $and: searchData,
+              },
+      },{
+        $lookup:{
+          from:"devices",
+          localField:"deviceId",
+          foreignField:"_id",
+          as:"device",
+        }, 
+      },{
+        $lookup:{
+          from:"models",
+          localField:"device.modelId",
+          foreignField:"_id",
+          as:"model",
+        }
+      }
+    ]).skip(data.skip?data.skip:0).limit(data.limit?data.limit:100);
     if (result.length !== 0) {
       res.send({ code: 1, data: result, msg: "" });
     } else {

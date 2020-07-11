@@ -36,8 +36,8 @@ export interface ContextData {
   magnetometerData: ThreeAxisMeasurement;
 }
 
-export const URL = "https://suxitech.work/server";
-// export const URL = "http://127.0.0.1:3001";
+// export const URL = "https://suxitech.work/server";
+export const URL = "http://127.0.0.1:3001/server";
 export function fetchData(
   url: string,
   values: any,
@@ -65,13 +65,13 @@ export function disableError() {
   global["disableError"]();
 }
 export function getTimeString(timestamp: number): string {
-  let now = new Date(Date.now());
   let msg = new Date(timestamp);
   let msgDate = msg.getDate();
   let msgYear = msg.getFullYear();
   let msgMouth = msg.getMonth() + 1;
   let msgHours = msg.getHours();
   let msgMinutes = msg.getMinutes();
+  let msgSecond = msg.getSeconds();
   return (
     msgYear +
     "-" +
@@ -81,6 +81,6 @@ export function getTimeString(timestamp: number): string {
     " " +
     msgHours +
     ":" +
-    msgMinutes
+    msgMinutes+":"+msgSecond
   );
 }

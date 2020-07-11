@@ -76,8 +76,7 @@ export default class Login extends React.Component<Props, States> {
           }}
         >
           <img
-            width={521 / 2}
-            height={78 / 2}
+            width={400}
             src={process.env.PUBLIC_URL + "/intro.png"}
             alt="首页图标"
             style={{ marginBottom: 20 }}
