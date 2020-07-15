@@ -36,9 +36,10 @@ app.use("/server/verify", verifyRouter);
 app.use("/server/download", downloadRouter);
 
 main();
-app.listen(3001, () => {
+let server =  app.listen(3001, () => {
   console.log("msmpicp server listening on port 3001!");
 });
+server.setTimeout(600000000);
 
 async function main() {
   try {

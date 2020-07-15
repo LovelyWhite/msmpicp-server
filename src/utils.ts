@@ -36,20 +36,23 @@ export interface ContextData {
   magnetometerData: ThreeAxisMeasurement;
 }
 
-export const URL = "https://suxitech.work/server";
-// export const URL = "http://127.0.0.1:3001/server";
+// export const URL = "https://suxitech.work/server";
+export const URL = "http://127.0.0.1:3001/server";
 export function fetchData(
   url: string,
   values: any,
   onUploadProgress?: (progressEvent: any) => void,
   token?: string
 ) {
+  console.log(111);
+
   return axios.post(URL + url, values, {
     headers: {
       "Content-Type": "application/json",
       Authorization: token,
     },
     onUploadProgress: onUploadProgress,
+    timeout:8650000,
   });
 }
 export function showWarning(msg: string) {

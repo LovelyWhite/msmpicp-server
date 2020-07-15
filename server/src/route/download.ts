@@ -7,14 +7,13 @@ const ObjectId = require("mongoose").Types.ObjectId;
 let router = express.Router();
 router.post("/contextdata", async (req, res) => {
   let data = req.body;
-  console.log(data);
-  let empty:boolean = true;
+  let empty: boolean = true;
   try {
     let searchData = [];
     if (data.startTime != undefined && data.stopTime != undefined) {
       searchData.push({ "location.time": { $gt: data.startTime } });
       searchData.push({ "location.time": { $lt: data.stopTime } });
-      empty=false
+      empty = false;
     }
     if (data.phoneModel) {
       let devices = await DeviceModel.find({
@@ -27,47 +26,50 @@ router.post("/contextdata", async (req, res) => {
           }),
         },
       });
-      empty=false
+      empty = false;
     }
     if (data.minLat) {
       searchData.push({ "location.latitude": { $gt: data.minLat } });
-      empty=false
+      empty = false;
     }
     if (data.maxLat) {
       searchData.push({ "location.latitude": { $lt: data.maxLat } });
-      empty=false
+      empty = false;
     }
     if (data.minLng) {
       searchData.push({ "location.longitude": { $gt: data.minLng } });
-      empty=false
+      empty = false;
     }
     if (data.maxLng) {
       searchData.push({ "location.longitude": { $lt: data.maxLng } });
-      empty=false
+      empty = false;
     }
+    console.log(searchData);
     let result = await ContextDataModel.aggregate([
       {
-        $match:
-           empty ? {}
-            : {
-                $and: searchData,
-              },
-      },{
-        $lookup:{
-          from:"devices",
-          localField:"deviceId",
-          foreignField:"_id",
-          as:"device",
-        }, 
-      },{
-        $lookup:{
-          from:"models",
-          localField:"device.modelId",
-          foreignField:"_id",
-          as:"model",
-        }
-      }
-    ]).skip(data.skip?data.skip:0).limit(data.limit?data.limit:100);
+        $match: empty
+          ? {}
+          : {
+              $and: searchData,
+            },
+      },
+      {
+        $lookup: {
+          from: "devices",
+          localField: "deviceId",
+          foreignField: "_id",
+          as: "device",
+        },
+      },
+      {
+        $lookup: {
+          from: "models",
+          localField: "device.modelId",
+          foreignField: "_id",
+          as: "model",
+        },
+      },
+    ]).limit(50000);
     if (result.length !== 0) {
       res.send({ code: 1, data: result, msg: "" });
     } else {
@@ -107,7 +109,6 @@ router.post("/dailydata", async (req, res) => {
       },
       { $sort: { _id: 1 } },
     ]);
-    console.log(result);
     if (result.length !== 0) {
       res.send({ code: 1, data: result, msg: "" });
     } else {
