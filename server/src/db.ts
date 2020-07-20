@@ -4,8 +4,8 @@ export async function openMongoose() {
     //   "mongodb://localhost:27017/msmpicp"
     // mongodb://admin:Mishiweilai123@39.105.171.169:27017/msmpicp?authSource=admin&readPreference=primary&gssapiServiceName=mongodb&appname=MongoDB%20Compass&ssl=false
     await mongoose.connect(
-      "mongodb://admin:Mishiweilai123@39.105.171.169:27017/msmpicp?authSource=admin&readPreference=primary&gssapiServiceName=mongodb&appname=MongoDB%20Compass&ssl=false",
-    //  "mongodb://localhost:27017/msmpicp?readPreference=primary&appname=MongoDB%20Compass&ssl=false",
+      // "mongodb://admin:Mishiweilai123@39.105.171.169:27017/msmpicp?authSource=admin&readPreference=primary&gssapiServiceName=mongodb&appname=MongoDB%20Compass&ssl=false",
+     "mongodb://localhost:27017/msmpicp?readPreference=primary&appname=MongoDB%20Compass&ssl=false",
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,

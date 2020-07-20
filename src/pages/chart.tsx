@@ -36,8 +36,6 @@ interface States {
   maxLng: number;
   minLat: number;
   maxLat: number;
-  limit: number;
-  skip: number;
   phoneModel: string;
   startTime: number;
   stopTime: number;
@@ -62,8 +60,6 @@ export default class Chart extends React.Component<Props, States> {
       phoneModel: undefined,
       startTime: undefined,
       stopTime: undefined,
-      limit:undefined,
-      skip:undefined,
     };
     this.getContextData = this.getContextData.bind(this);
     this.exportExcel = this.exportExcel.bind(this);
@@ -87,36 +83,44 @@ export default class Chart extends React.Component<Props, States> {
       phoneModel,
       startTime,
       stopTime,
-      skip,
-      limit
     } = this.state;
     try {
-      let contextData = await fetchData(
-        "/download/contextdata",
-        {
-          minLng,
-          maxLng,
-          minLat,
-          maxLat,
-          phoneModel,
-          startTime,
-          stopTime,
-          skip,
-          limit
-        },
-        undefined,
-        this.token
-      );
-      if (contextData && contextData.data) {
-        if (contextData.data.code === 1) {
-          console.log(contextData.data.data);
-          this.setState({
-            dataSource: contextData.data.data ? contextData.data.data : [],
-          });
-        } else {
-          showError(contextData.data.msg);
+      let contextData:any[] = [];
+      let _contextData;
+      let time = 0;
+      while (_contextData == undefined || _contextData.data.data.length == 40000) {
+        _contextData = await fetchData(
+          "/download/contextdata",
+          {
+            minLng,
+            maxLng,
+            minLat,
+            maxLat,
+            phoneModel,
+            startTime,
+            stopTime,
+            skip: 40000 * time,
+            limit: 40000,
+          },
+          undefined,
+          this.token
+        );
+        if (_contextData && _contextData.data) {
+          if (_contextData.data.code === 1) {
+            _contextData.data.data.forEach(e=>{
+              e.key = e._id;
+              contextData.push(e);
+            })
+          } else {
+            showError(_contextData.data.msg);
+          }
         }
+        time++;
       }
+      console.log(contextData);
+      this.setState({
+        dataSource: contextData ? contextData : [],
+      });
     } catch (e) {
       showError(e + "");
       console.log(e);
@@ -153,8 +157,8 @@ export default class Chart extends React.Component<Props, States> {
         "加速度(y)": number;
         "加速度(z)": number;
         "位置(精确度)": number;
-        品牌名:string,
-        设备名称:string;
+        品牌名: string;
+        设备名称: string;
       }[] = [];
       this.state.dataSource.forEach((e: any) => {
         let msg = new Date(e.location.time);
@@ -166,7 +170,7 @@ export default class Chart extends React.Component<Props, States> {
         let msgSecond = msg.getSeconds();
         _data.push({
           日期: msgYear + "-" + msgMouth + "-" + msgDate,
-          时间: msgHours + ":" + msgMinutes+":"+msgSecond,
+          时间: msgHours + ":" + msgMinutes + ":" + msgSecond,
           经度: e.location.longitude,
           纬度: e.location.latitude,
           海拔: e.location.altitude,
@@ -181,9 +185,9 @@ export default class Chart extends React.Component<Props, States> {
           "加速度(y)": e.accelerometerData.y,
           "加速度(z)": e.accelerometerData.z,
           "位置(精确度)": e.location.accuracy,
-         
-          品牌名:e.model[0].brandName,
-          设备名称:e.model[0].phoneModelName,
+
+          品牌名: e.model[0].brandName,
+          设备名称: e.model[0].phoneModelName,
         });
       });
       let r: any = JSON.stringify(_data);
@@ -360,40 +364,7 @@ export default class Chart extends React.Component<Props, States> {
               placeholder={["开始时间", "结束时间"]}
               style={{ width: 260 }}
             />
-            <Input
-              type="number"
-              value={this.state.skip}
-              className="site-input-right"
-              style={{
-                width: 150,
-                textAlign: "center",
-              }}
-              placeholder="跳过数据条数(0)"
-              onChange={(e) => {
-                this.setState({
-                  skip: Number.parseInt(e.currentTarget.value)
-                    ? Number.parseInt(e.currentTarget.value)
-                    : undefined,
-                });
-              }}
-            />
-            <Input
-              type="number"
-              value={this.state.limit}
-              className="site-input-right"
-              style={{
-                width: 150,
-                textAlign: "center",
-              }}
-              placeholder="数据总量(100)"
-              onChange={(e) => {
-                this.setState({
-                  limit: Number.parseInt(e.currentTarget.value)
-                    ? Number.parseInt(e.currentTarget.value)
-                    : undefined,
-                });
-              }}
-            />
+           
             <Button
               type="primary"
               loading={this.state.contextDataLoading}

@@ -44,8 +44,6 @@ export function fetchData(
   onUploadProgress?: (progressEvent: any) => void,
   token?: string
 ) {
-  console.log(111);
-
   return axios.post(URL + url, values, {
     headers: {
       "Content-Type": "application/json",
