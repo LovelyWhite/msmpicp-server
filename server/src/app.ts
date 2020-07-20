@@ -7,6 +7,7 @@ import uploadRouter from "./route/upload";
 import { openMongoose } from "./db";
 import verifyRouter from "./route/verify";
 import downloadRouter from "./route/download";
+import compression from "compression"
 
 const app = express();
 app.use(bodyParser.json());
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
     });
   }
 });
+app.use(compression());
 app.use("/server", indexRouter);
 app.use("/server/upload", uploadRouter);
 app.use("/server/verify", verifyRouter);
