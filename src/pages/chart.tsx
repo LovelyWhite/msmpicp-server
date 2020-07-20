@@ -25,6 +25,7 @@ import ECharts from "echarts/lib/echarts";
 import theme from "../static/theme.json";
 import Column from "antd/lib/table/Column";
 import { Parser } from "json2csv";
+import { fail } from "assert";
 interface Props {
   history: any;
 }
@@ -45,6 +46,7 @@ interface States {
 ECharts.registerTheme("walden", theme);
 export default class Chart extends React.Component<Props, States> {
   token: string;
+  lastId:string;
   constructor(props: Readonly<Props>) {
     super(props);
     this.state = {
@@ -61,6 +63,7 @@ export default class Chart extends React.Component<Props, States> {
       startTime: undefined,
       stopTime: undefined,
     };
+    this.lastId =undefined;
     this.getContextData = this.getContextData.bind(this);
     this.exportExcel = this.exportExcel.bind(this);
   }
@@ -74,6 +77,7 @@ export default class Chart extends React.Component<Props, States> {
       contextDataLoading: true,
       dataSource: [],
     });
+    this.lastId = undefined;
     disableError();
     let {
       minLng,
@@ -87,7 +91,6 @@ export default class Chart extends React.Component<Props, States> {
     try {
       let contextData:any[] = [];
       let _contextData;
-      let time = 0;
       while (_contextData == undefined || _contextData.data.data.length == 40000) {
         _contextData = await fetchData(
           "/download/contextdata",
@@ -99,14 +102,16 @@ export default class Chart extends React.Component<Props, States> {
             phoneModel,
             startTime,
             stopTime,
-            skip: 40000 * time,
-            limit: 40000,
+            lastId:this.lastId
           },
           undefined,
           this.token
         );
         if (_contextData && _contextData.data) {
           if (_contextData.data.code === 1) {
+            this.lastId = _contextData.data.data[_contextData.data.data.length-1]._id
+            console.log(this.lastId)
+            console.log(_contextData.data.data);
             _contextData.data.data.forEach(e=>{
               e.key = e._id;
               contextData.push(e);
@@ -115,9 +120,7 @@ export default class Chart extends React.Component<Props, States> {
             showError(_contextData.data.msg);
           }
         }
-        time++;
       }
-      console.log(contextData);
       this.setState({
         dataSource: contextData ? contextData : [],
       });

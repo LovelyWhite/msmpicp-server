@@ -8,9 +8,14 @@ let router = express.Router();
 router.post("/contextdata", async (req, res) => {
   let data = req.body;
   let empty: boolean = true;
-  console.log(data);
   try {
     let searchData = [];
+    if (data.lastId != undefined) {
+      searchData.push({
+        "_id": { $gt:new ObjectId( data.lastId) },
+      });
+      empty = false;
+    }
     if (data.startTime != undefined && data.stopTime != undefined) {
       searchData.push({ "location.time": { $gt: data.startTime } });
       searchData.push({ "location.time": { $lt: data.stopTime } });
@@ -45,6 +50,7 @@ router.post("/contextdata", async (req, res) => {
       searchData.push({ "location.longitude": { $lt: data.maxLng } });
       empty = false;
     }
+    console.log(searchData);
     let result = await ContextDataModel.aggregate([
       {
         $match: empty
@@ -52,6 +58,9 @@ router.post("/contextdata", async (req, res) => {
           : {
               $and: searchData,
             },
+      },
+      {
+        $limit: 40000,
       },
       {
         $lookup: {
@@ -69,7 +78,7 @@ router.post("/contextdata", async (req, res) => {
           as: "model",
         },
       },
-    ]).skip(data.skip).limit(data.limit);
+    ]);
     if (result.length !== 0) {
       res.send({ code: 1, data: result, msg: "" });
     } else {
